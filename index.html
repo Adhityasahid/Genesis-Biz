@@ -1,0 +1,420 @@
+<think>
+Pertama, pengguna meminta untuk menambahkan tempat untuk logo perusahaan. Kode HTML yang diberikan adalah index.html, dan ada kesalahan di bagian logo: `<div class="logo" img src="GENESIS No BG.png">` – ini salah, harus `<img src="GENESIS No BG.png" alt="Logo">` di dalam div.
+
+</think>### Analisis Permintaan
+- Anda ingin menambahkan tempat untuk logo perusahaan di index.html. Kode yang Anda berikan memiliki kesalahan di bagian logo: `<div class="logo" img src="GENESIS No BG.png">` – ini tidak valid. Seharusnya `<img>` berada di dalam div.
+- Saya akan memperbaiki kesalahan tersebut dan menambahkan elemen logo yang tepat. Logo bisa ditempatkan di header (sebagai bagian dari navbar), footer, atau hero section. Untuk konsistensi, saya tambahkan di header (di samping judul) dan footer (di kolom pertama footer).
+- Asumsi: File logo adalah "GENESIS No BG.png" (pastikan path benar, misalnya di folder yang sama dengan index.html). Jika logo tidak ada, gunakan placeholder.
+
+### Kode Index.html yang Diperbarui
+- Berikut adalah versi lengkap index.html dengan perbaikan logo. Saya tambahkan `<img>` di dalam div logo di header, dan tambahkan logo di footer untuk branding tambahan.
+- **Perubahan Utama**:
+  - Di header: Logo ditambahkan di samping judul "Genesis Biz".
+  - Di footer: Logo ditambahkan di kolom pertama footer.
+  - Styling sederhana ditambahkan untuk logo (ukuran, margin) agar terlihat rapi.
+
+```
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genesis Biz - Portal Artikel & Informasi Terkini</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        document.addEventListener('keydown', function(event) {
+            // Shortcut: Ctrl + Shift + A untuk menampilkan tombol admin
+            if (event.ctrlKey && event.shiftKey && event.key === 'A') {
+                event.preventDefault();
+                const adminBtn = document.getElementById('admin-btn');
+                adminBtn.style.display = adminBtn.style.display === 'none' ? 'block' : 'none';
+            }
+        });
+    </script>
+    <style>
+        /* Styling tambahan untuk logo */
+        .logo img {
+            height: 50px; /* Sesuaikan ukuran logo */
+            margin-right: 10px; /* Jarak dari teks */
+            vertical-align: middle;
+        }
+        .footer-logo {
+            height: 40px; /* Ukuran logo di footer */
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-wrapper">
+                    <div class="logo">
+                        <img src="GENESIS No BG.png" alt="Logo Genesis Biz"> <!-- Logo ditambahkan di sini -->
+                        <h1>Genesis <span>Biz</span></h1>
+                    </div>
+                    <ul class="nav-menu">
+                        <li><a href="#home" class="active">Beranda</a></li>
+                        <li><a href="#artikel">Artikel</a></li>
+                        <li><a href="#kategori">Kategori</a></li>
+                        <li><a href="#tentang">Tentang Kami</a></li>
+                        <li><a href="#kontak">Kontak</a></li>
+                    </ul>
+                    <div class="nav-icons">
+                        <button class="search-btn">🔍</button>
+                        <button class="menu-toggle">☰</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h2 class="hero-title">Temukan Informasi & Artikel Berkualitas</h2>
+                <p class="hero-subtitle">Genesis Biz menyajikan artikel terkini seputar bisnis, teknologi, lifestyle, dan berbagai topik menarik lainnya</p>
+                <div class="search-box">
+                    <input type="text" placeholder="Cari artikel yang Anda butuhkan...">
+                    <button>Cari</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kategori Section -->
+    <section class="kategori-section" id="kategori">
+        <div class="container">
+            <h2 class="section-title">Kategori Artikel</h2>
+            <div class="kategori-grid">
+                <div class="kategori-card">
+                    <div class="kategori-icon">💼</div>
+                    <h3>Bisnis</h3>
+                    <p>125 Artikel</p>
+                </div>
+                <div class="kategori-card">
+                    <div class="kategori-icon">💻</div>
+                    <h3>Teknologi</h3>
+                    <p>98 Artikel</p>
+                </div>
+                <div class="kategori-card">
+                    <div class="kategori-icon">🎨</div>
+                    <h3>Lifestyle</h3>
+                    <p>87 Artikel</p>
+                </div>
+                <div class="kategori-card">
+                    <div class="kategori-icon">📈</div>
+                    <h3>Keuangan</h3>
+                    <p>72 Artikel</p>
+                </div>
+                <div class="kategori-card">
+                    <div class="kategori-icon">🌍</div>
+                    <h3>Berita</h3>
+                    <p>156 Artikel</p>
+                </div>
+                <div class="kategori-card">
+                    <div class="kategori-icon">🎯</div>
+                    <h3>Motivasi</h3>
+                    <p>64 Artikel</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Artikel Section -->
+    <section class="artikel-section" id="artikel">
+        <div class="container">
+            <div class="artikel-header">
+                <h2 class="section-title">Artikel Terbaru</h2>
+                <div class="filter-tabs">
+                    <button class="tab active">Semua</button>
+                    <button class="tab">Terpopuler</button>
+                    <button class="tab">Terbaru</button>
+                    <button class="tab">Trending</button>
+                </div>
+            </div>
+            
+            <div class="artikel-wrapper">
+                <!-- Main Content -->
+                <div class="artikel-main">
+                    <!-- Featured Article -->
+                    <article class="artikel-featured">
+                        <div class="artikel-image">
+                            <img src="https://via.placeholder.com/800x400" alt="Artikel Featured">
+                            <span class="badge">Featured</span>
+                        </div>
+                        <div class="artikel-content">
+                            <div class="artikel-meta">
+                                <span class="kategori-tag">Bisnis</span>
+                                <span class="date">2 Desember 2024</span>
+                            </div>
+                            <h3>Strategi Bisnis Digital di Era Modern: Panduan Lengkap untuk Pemula</h3>
+                            <p>Pelajari bagaimana membangun bisnis digital yang sukses dengan strategi pemasaran online, optimasi SEO, dan teknik growth hacking terkini...</p>
+                            <div class="artikel-footer">
+                                <div class="author">
+                                    <img src="https://via.placeholder.com/40" alt="Author">
+                                    <span>Ahmad Rizki</span>
+                                </div>
+                                <a href="#" class="read-more">Baca Selengkapnya →</a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Article Grid -->
+                    <div class="artikel-grid">
+                        <article class="artikel-card">
+                            <div class="artikel-image">
+                                <img src="https://via.placeholder.com/400x250" alt="Artikel">
+                            </div>
+                            <div class="artikel-content">
+                                <div class="artikel-meta">
+                                    <span class="kategori-tag">Teknologi</span>
+                                    <span class="date">1 Des 2024</span>
+                                </div>
+                                <h3>Artificial Intelligence: Masa Depan Teknologi</h3>
+                                <p>Bagaimana AI mengubah cara kita bekerja dan hidup di era digital ini...</p>
+                                <div class="artikel-footer">
+                                    <div class="author">
+                                        <img src="https://via.placeholder.com/40" alt="Author">
+                                        <span>Siti Nurhaliza</span>
+                                    </div>
+                                    <a href="#" class="read-more">Baca →</a>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="artikel-card">
+                            <div class="artikel-image">
+                                <img src="https://via.placeholder.com/400x250" alt="Artikel">
+                            </div>
+                            <div class="artikel-content">
+                                <div class="artikel-meta">
+                                    <span class="kategori-tag">Lifestyle</span>
+                                    <span class="date">30 Nov 2024</span>
+                                </div>
+                                <h3>Tips Produktif Bekerja dari Rumah</h3>
+                                <p>Maksimalkan produktivitas dengan cara kerja yang efektif dari rumah...</p>
+                                <div class="artikel-footer">
+                                    <div class="author">
+                                        <img src="https://via.placeholder.com/40" alt="Author">
+                                        <span>Budi Santoso</span>
+                                    </div>
+                                    <a href="#" class="read-more">Baca →</a>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="artikel-card">
+                            <div class="artikel-image">
+                                <img src="https://via.placeholder.com/400x250" alt="Artikel">
+                            </div>
+                            <div class="artikel-content">
+                                <div class="artikel-meta">
+                                    <span class="kategori-tag">Keuangan</span>
+                                    <span class="date">29 Nov 2024</span>
+                                </div>
+                                <h3>Investasi untuk Generasi Milenial</h3>
+                                <p>Panduan investasi cerdas untuk membangun kekayaan jangka panjang...</p>
+                                <div class="artikel-footer">
+                                    <div class="author">
+                                        <img src="https://via.placeholder.com/40" alt="Author">
+                                        <span>Diana Putri</span>
+                                    </div>
+                                    <a href="#" class="read-more">Baca →</a>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="artikel-card">
+                            <div class="artikel-image">
+                                <img src="https://via.placeholder.com/400x250" alt="Artikel">
+                            </div>
+                            <div class="artikel-content">
+                                <div class="artikel-meta">
+                                    <span class="kategori-tag">Berita</span>
+                                    <span class="date">28 Nov 2024</span>
+                                </div>
+                                <h3>Perkembangan Ekonomi Indonesia Q4 2024</h3>
+                                <p>Analisis lengkap kondisi ekonomi dan proyeksi untuk tahun mendatang...</p>
+                                <div class="artikel-footer">
+                                    <div class="author">
+                                        <img src="https://via.placeholder.com/40" alt="Author">
+                                        <span>Eko Prasetyo</span>
+                                    </div>
+                                    <a href="#" class="read-more">Baca →</a>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="artikel-card">
+                            <div class="artikel-image">
+                                <img src="https://via.placeholder.com/400x250" alt="Artikel">
+                            </div>
+                            <div class="artikel-content">
+                                <div class="kategori-tag">Motivasi</span>
+                                <span class="date">27 Nov 2024</span>
+                            </div>
+                            <h3>Membangun Mindset Sukses dalam Bisnis</h3>
+                            <p>Kunci sukses dimulai dari pola pikir yang tepat dan konsisten...</p>
+                            <div class="artikel-footer">
+                                <div class="author">
+                                    <img src="https://via.placeholder.com/40" alt="Author">
+                                    <span>Farah Amalia</span>
+                                </div>
+                                <a href="#" class="read-more">Baca →</a>
+                            </div>
+                        </article>
+
+                        <article class="artikel-card">
+                            <div class="artikel-image">
+                                <img src="https://via.placeholder.com/400x250" alt="Artikel">
+                            </div>
+                            <div class="artikel-content">
+                                <div class="artikel-meta">
+                                    <span class="kategori-tag">Teknologi</span>
+                                    <span class="date">26 Nov 2024</span>
+                                </div>
+                                <h3>Cloud Computing untuk Bisnis Kecil</h3>
+                                <p>Manfaatkan teknologi cloud untuk efisiensi operasional bisnis Anda...</p>
+                                <div class="artikel-footer">
+                                    <div class="author">
+                                        <img src="https://via.placeholder.com/40" alt="Author">
+                                        <span>Gita Savitri</span>
+                                    </div>
+                                    <a href="#" class="read-more">Baca →</a>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+
+                    <div class="pagination">
+                        <button class="page-btn">← Sebelumnya</button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn">3</button>
+                        <button class="page-btn">4</button>
+                        <button class="page-btn">Selanjutnya →</button>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <aside class="sidebar">
+                    <!-- Popular Articles -->
+                    <div class="sidebar-widget">
+                        <h3 class="widget-title">Artikel Populer</h3>
+                        <div class="popular-list">
+                            <article class="popular-item">
+                                <img src="https://via.placeholder.com/80" alt="Popular">
+                                <div class="popular-content">
+                                    <h4>10 Tips Meningkatkan Penjualan Online</h4>
+                                    <span class="date">1 Des 2024</span>
+                                </div>
+                            </article>
+                            <article class="popular-item">
+                                <img src="https://via.placeholder.com/80" alt="Popular">
+                                <div class="popular-content">
+                                    <h4>Cara Memulai Podcast Profesional</h4>
+                                    <span class="date">30 Nov 2024</span>
+                                </div>
+                            </article>
+                            <article class="popular-item">
+                                <img src="https://via.placeholder.com/80" alt="Popular">
+                                <div class="popular-content">
+                                    <h4>Social Media Marketing 101</h4>
+                                    <span class="date">29 Nov 2024</span>
+                                </div>
+                            </article>
+                            <article class="popular-item">
+                                <img src="https://via.placeholder.com/80" alt="Popular">
+                                <div class="popular-content">
+                                    <h4>Tren E-commerce 2025</h4>
+                                    <span class="date">28 Nov 2024</span>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+
+                    <!-- Newsletter -->
+                    <div class="sidebar-widget newsletter">
+                        <h3 class="widget-title">Newsletter</h3>
+                        <p>Dapatkan artikel terbaru langsung ke email Anda</p>
+                        <form class="newsletter-form">
+                            <input type="email" placeholder="Email Anda" required>
+                            <button type="submit">Berlangganan</button>
+                        </form>
+                    </div>
+
+                    <!-- Tags -->
+                    <div class="sidebar-widget">
+                        <h3 class="widget-title">Tag Populer</h3>
+                        <div class="tag-cloud">
+                            <a href="#" class="tag">Bisnis</a>
+                            <a href="#" class="tag">Startup</a>
+                            <a href="#" class="tag">Marketing</a>
+                            <a href="#" class="tag">Digital</a>
+                            <a href="#" class="tag">Teknologi</a>
+                            <a href="#" class="tag">AI</a>
+                            <a href="#" class="tag">Investasi</a>
+                            <a href="#" class="tag">Finance</a>
+                            <a href="#" class="tag">Lifestyle</a>
+                            <a href="#" class="tag">Tips</a>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <img src="GENESIS No BG.png" alt="Logo Genesis Biz" class="footer-logo"> <!-- Logo ditambahkan di footer -->
+                    <h3>Genesis <span>Biz</span></h3>
+                    <p>Platform artikel dan informasi terpercaya untuk menemani perjalanan bisnis dan kehidupan Anda.</p>
+                    <div class="social-links">
+                        <a href="#">📘</a>
+                        <a href="#">🐦</a>
+                        <a href="#">📷</a>
+                        <a href="#">💼</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Kategori</h4>
+                    <ul>
+                        <li><a href="#">Bisnis</a></li>
+                        <li><a href="#">Teknologi</a></li>
+                        <li><a href="#">Lifestyle</a></li>
+                        <li><a href="#">Keuangan</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Perusahaan</h4>
+                    <ul>
+                        <li><a href="#">Tentang Kami</a></li>
+                        <li><a href="#">Tim Kami</a></li>
+                        <li><a href="#">Karir</a></li>
+                        <li><a href="#">Hubungi Kami</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Kebijakan Privasi</a></li>
+                        <li><a href="#">Syarat & Ketentuan</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                        <li><a href="#">Disclaimer</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Genesis Biz. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Hidden Admin Button -->
+    <button id="admin-btn"> </button>
