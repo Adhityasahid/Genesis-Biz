@@ -231,6 +231,18 @@
             padding: 1rem;
             border-radius: 8px;
             margin-bottom: 1rem;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         .alert-success {
@@ -285,6 +297,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: transform 0.2s;
+        }
+
+        .artikel-item:hover {
+            transform: translateX(5px);
         }
 
         .artikel-item h4 {
@@ -326,6 +343,11 @@
             color: white;
         }
 
+        .btn-view {
+            background: #27ae60;
+            color: white;
+        }
+
         .loading {
             display: none;
             text-align: center;
@@ -349,6 +371,30 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            opacity: 0.9;
         }
 
         @media (max-width: 768px) {
@@ -386,12 +432,28 @@
     <header class="admin-header">
         <div class="container">
             <h1>Genesis <span>Biz</span> - Admin Dashboard</h1>
-            <a href="index.html" class="back-btn">← Kembali ke Website</a>
+            <a href="index.html" class="back-btn" onclick="notifyIndexPage()">← Kembali ke Website</a>
         </div>
     </header>
 
     <div class="container">
         <div id="alertContainer"></div>
+
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3 id="totalArticles">0</h3>
+                <p>Total Artikel</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="todayArticles">0</h3>
+                <p>Artikel Hari Ini</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="totalCategories">6</h3>
+                <p>Kategori</p>
+            </div>
+        </div>
 
         <div class="dashboard-grid">
             <!-- Upload Section -->
@@ -481,7 +543,22 @@
     </div>
 
     <script>
-        
+        // Update statistics
+        function updateStats() {
+            const artikels = JSON.parse(localStorage.getItem('genesisBizArtikels') || '[]');
+            const today = new Date().toLocaleDateString('id-ID');
+            const todayArticles = artikels.filter(a => a.tanggal === today).length;
+
+            document.getElementById('totalArticles').textContent = artikels.length;
+            document.getElementById('todayArticles').textContent = todayArticles;
+        }
+
+        // Notify index page to reload
+        function notifyIndexPage() {
+            // Set flag untuk trigger reload di index.html
+            localStorage.setItem('genesisBizReload', Date.now().toString());
+        }
+
         // Drag and Drop functionality
         const uploadArea = document.getElementById('uploadArea');
 
@@ -515,6 +592,12 @@
         async function processFile(file) {
             const fileInfo = document.getElementById('fileInfo');
             const loading = document.getElementById('loadingIndicator');
+            
+            // Validate file size (max 10MB)
+            if (file.size > 10 * 1024 * 1024) {
+                showAlert('error', 'File terlalu besar! Maksimal 10MB');
+                return;
+            }
             
             // Show file info
             document.getElementById('fileName').textContent = file.name;
@@ -563,7 +646,10 @@
                     
                     document.getElementById('loadingIndicator').classList.remove('show');
                     document.getElementById('fileStatus').textContent = 'Berhasil! ✅';
-                    showAlert('success', 'File berhasil diproses! Silakan lengkapi informasi tambahan dan klik Simpan.');
+                    showAlert('success', 'File berhasil diproses! Silakan lengkapi informasi tambahan (Kategori & Penulis) dan klik Simpan.');
+                    
+                    // Scroll to form
+                    document.getElementById('kategoriArtikel').focus();
                 } catch (error) {
                     throw error;
                 }
@@ -611,15 +697,20 @@
                 penulis: document.getElementById('penulisArtikel').value,
                 gambar: document.getElementById('gambarArtikel').value || 'https://via.placeholder.com/400x250',
                 isi: document.getElementById('isiArtikel').value,
-                tanggal: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
+                tanggal: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }),
+                created: Date.now()
             };
 
-            // Save to storage (in real app, this would be a database)
+            // Save to localStorage
             saveArtikel(artikel);
             
-            showAlert('success', '✅ Artikel berhasil disimpan!');
+            showAlert('success', '✅ Artikel berhasil disimpan dan akan muncul di beranda!');
             clearForm();
             loadArtikelList();
+            updateStats();
+            
+            // Notify other tabs/windows
+            notifyIndexPage();
         }
 
         // Save artikel
@@ -627,6 +718,9 @@
             let artikels = JSON.parse(localStorage.getItem('genesisBizArtikels') || '[]');
             artikels.unshift(artikel);
             localStorage.setItem('genesisBizArtikels', JSON.stringify(artikels));
+            
+            console.log('✅ Artikel tersimpan:', artikel.judul);
+            console.log('📊 Total artikel:', artikels.length);
         }
 
         // Load artikel list
@@ -635,17 +729,18 @@
             const listContainer = document.getElementById('artikelList');
             
             if (artikels.length === 0) {
-                listContainer.innerHTML = '<p style="text-align: center; color: #7f8c8d;">Belum ada artikel tersimpan</p>';
+                listContainer.innerHTML = '<p style="text-align: center; color: #7f8c8d; padding: 2rem;">Belum ada artikel tersimpan. Upload file atau isi form untuk membuat artikel pertama Anda!</p>';
                 return;
             }
 
             listContainer.innerHTML = artikels.map(artikel => `
                 <div class="artikel-item">
-                    <div>
+                    <div style="flex: 1;">
                         <h4>${artikel.judul}</h4>
                         <p>${artikel.kategori} • ${artikel.penulis} • ${artikel.tanggal}</p>
                     </div>
                     <div class="artikel-actions">
+                        <button class="btn-small btn-view" onclick="viewArtikel(${artikel.id})">Lihat</button>
                         <button class="btn-small btn-edit" onclick="editArtikel(${artikel.id})">Edit</button>
                         <button class="btn-small btn-delete" onclick="deleteArtikel(${artikel.id})">Hapus</button>
                     </div>
@@ -653,14 +748,38 @@
             `).join('');
         }
 
+        // View artikel
+        function viewArtikel(id) {
+            const artikels = JSON.parse(localStorage.getItem('genesisBizArtikels') || '[]');
+            const artikel = artikels.find(a => a.id === id);
+            
+            if (artikel) {
+                const previewContent = `
+                    <span style="background: #3498db; color: white; padding: 0.3rem 1rem; border-radius: 15px; font-size: 0.85rem; display: inline-block; margin-bottom: 1rem;">${artikel.kategori}</span>
+                    <h3 style="color: #2c3e50; margin-bottom: 1rem; font-size: 1.8rem;">${artikel.judul}</h3>
+                    <p style="color: #7f8c8d; margin-bottom: 1.5rem;"><strong>Penulis:</strong> ${artikel.penulis}</p>
+                    <div style="white-space: pre-line;">${artikel.isi}</div>
+                `;
+                
+                document.getElementById('previewContent').innerHTML = previewContent;
+                document.querySelector('.preview-area').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
         // Delete artikel
         function deleteArtikel(id) {
-            if (confirm('Yakin ingin menghapus artikel ini?')) {
+            if (confirm('Yakin ingin menghapus artikel ini? Artikel akan hilang dari beranda.')) {
                 let artikels = JSON.parse(localStorage.getItem('genesisBizArtikels') || '[]');
+                const deletedArtikel = artikels.find(a => a.id === id);
                 artikels = artikels.filter(a => a.id !== id);
                 localStorage.setItem('genesisBizArtikels', JSON.stringify(artikels));
+                
                 loadArtikelList();
-                showAlert('success', 'Artikel berhasil dihapus');
+                updateStats();
+                showAlert('success', `Artikel "${deletedArtikel?.judul}" berhasil dihapus`);
+                
+                // Notify index page
+                notifyIndexPage();
             }
         }
 
@@ -673,15 +792,19 @@
                 document.getElementById('judulArtikel').value = artikel.judul;
                 document.getElementById('kategoriArtikel').value = artikel.kategori;
                 document.getElementById('penulisArtikel').value = artikel.penulis;
-                document.getElementById('gambarArtikel').value = artikel.gambar;
+                document.getElementById('gambarArtikel').value = artikel.gambar !== 'https://via.placeholder.com/400x250' ? artikel.gambar : '';
                 document.getElementById('isiArtikel').value = artikel.isi;
                 updatePreview();
                 
-                // Delete old version
-                deleteArtikel(id);
+                // Hapus artikel lama
+                let updatedArtikels = artikels.filter(a => a.id !== id);
+                localStorage.setItem('genesisBizArtikels', JSON.stringify(updatedArtikels));
                 
                 window.scrollTo({ top: 0, behavior: 'smooth' });
-                showAlert('info', 'Artikel dimuat untuk diedit. Klik Simpan setelah selesai.');
+                showAlert('info', `Artikel "${artikel.judul}" dimuat untuk diedit. Klik Simpan setelah selesai.`);
+                
+                loadArtikelList();
+                updateStats();
             }
         }
 
@@ -702,14 +825,27 @@
             alertContainer.appendChild(alert);
             
             setTimeout(() => {
-                alert.remove();
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 300);
             }, 5000);
         }
 
-        // Load artikel list on page load
-        loadArtikelList();
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            loadArtikelList();
+            updateStats();
+            console.log('🚀 Admin Dashboard loaded');
+            console.log('📦 localStorage key: genesisBizArtikels');
+        });
 
-        
+        // Debug: Monitor localStorage changes
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'genesisBizArtikels') {
+                console.log('🔄 localStorage updated from another tab');
+                loadArtikelList();
+                updateStats();
+            }
+        });
     </script>
 </body>
 </html>
